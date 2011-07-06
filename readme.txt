@@ -8,8 +8,6 @@ processRequest() is called. The user is free to use the buffer between
 calls to processRequest() as all state information is held internally
 by the class.
 
-The library supports standard file access. 
-
 The IniFile library is used to configure the server. Standard file
 access by GET is implemented, as is making selected files and
 directories inaccessible (403 Forbidden). CGI access methods, and
