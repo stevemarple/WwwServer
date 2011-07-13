@@ -1,0 +1,12 @@
+Add access control (username password, and hosts allow if information
+is available from Client class).
+
+Add PUT method (needs a copy or rename file operation).
+
+Add CGI handler.
+
+Update keywords.txt.
+
+
+
+

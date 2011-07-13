@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map For WwwServer
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+WwwServer     KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin   KEYWORD2
+disconnect     KEYWORD2
+processRequest        KEYWORD2
+getState     KEYWORD2
+getStats     KEYWORD2
+
+
+#######################################
+# Constants (LITERAL1)
+#######################################
