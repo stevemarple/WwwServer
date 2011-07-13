@@ -1,6 +1,10 @@
 Add access control (username password, and hosts allow if information
 is available from Client class).
 
+Add option to select behaviour when directory is accessed, either
+produce a directory listing, deny or send the contents of a file (eg
+index.htm).
+
 Add PUT method (needs a copy or rename file operation).
 
 Add CGI handler.
