@@ -153,8 +153,6 @@ public:
   int8_t sendFileMimeType(boolean defaultType, char* buffer, int len);
   int8_t sendFile(char* buffer, int len);
 
-  // void sendDirectoryListing(char* buffer, int len);
-
   void sendDirectoryListingHeader(void);
   int8_t sendDirectoryListingBody(char *buffer, int len);
   void sendDirectoryListingFooter(void);

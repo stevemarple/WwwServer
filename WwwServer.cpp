@@ -112,6 +112,7 @@ void WwwServer::disconnect(void)
   _iniState = IniFileState();
 }
 
+// Return number of characters, or negative if an error
 int WwwServer::readLineFromClient(char* buffer, int len)
 {
   int i = 0;
@@ -173,13 +174,11 @@ int8_t WwwServer::processRequest(char* buffer, int len)
     _client = _server.available();
     if (!_client) 
       break;
-    else {
-      
-      // TO DO: Check if client is allowed access
-      _state = stateReadingMethod;
-      break;
-    }
-
+    
+    // TO DO: Check if client is allowed access
+    _state = stateReadingMethod;
+    break;
+    
   case stateReadingMethod:
     i = parseMethodUrlQueryString(buffer, len);
     if (i < 0) {
@@ -188,7 +187,6 @@ int8_t WwwServer::processRequest(char* buffer, int len)
       else
 	_statusCode = statusBadRequest;
       _state = stateSendingStatusCode;
-      //_stateData = 0;
       break;
     }
     _state = stateGettingHandlerSetUp;
@@ -371,11 +369,6 @@ int8_t WwwServer::processRequest(char* buffer, int len)
     if (sendFile(buffer, len))
       _state = stateClosingConnection;
     break;
-
-  // case stateSendingDirectoryListing:
-  //   sendDirectoryListing(buffer, len);
-  //   _state = stateClosingConnection;
-  //   break;
 
   case stateSendingDirectoryListingHeader:
     sendDirectoryListingHeader();
@@ -829,49 +822,6 @@ void WwwServer::sendDirectoryListingFooter(void)
   _client.println("</p><hr />");
   printHtmlPageFooter();
 }
-
-/*
-void WwwServer::sendDirectoryListing(char *buffer, int len)
-{
-  printHtmlPageHeader(_url);
-  _client.println("<p>");
-  if (strcmp(_url, "/"))
-    _client.println("<a href=\"..\">..</a><br />");
-  File f;
-  int files = 0;
-  int dirs = 0;
-  _file.rewindDirectory();
-  while ((f = _file.openNextFile(FILE_READ)) != 0) {
-    char *p = strncpy(buffer, f.name(), len);
-    buffer[len-1] = '\0';
-    while (*p) {
-      *p = tolower(*p);
-      ++p;
-    }
-    _client.print("<a href=\"");
-    _client.print(buffer);
-    if (f.isDirectory()) {
-      ++dirs;
-      _client.print('/');
-    }
-    else
-      ++files;
-    _client.print("\">");
-    _client.print(buffer);
-    if (f.isDirectory())
-      _client.print('/');
-    _client.println("</a><br />");
-    f.close();
-  }
-  
-  _client.print("</p><p>Found ");
-  _client.print(files, DEC);
-  _client.print(" file(s) and ");
-  _client.print(dirs, DEC);
-  _client.println(" folder(s)</p>");
-  printHtmlPageFooter();
-}
-*/
 
 // Send the web server status
 void WwwServer::sendStatus(void)

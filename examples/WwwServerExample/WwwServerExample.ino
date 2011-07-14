@@ -58,23 +58,7 @@ void loop(void)
   // Do the real work/data logging here
   // delay(500);
 
+  
   www.processRequest(buffer,  bufferLen);
 
-  int8_t worstCaseState;
-  unsigned long timeTakenWorstCase, timeTakenTotal, processRequestCount;
-
-  /*
-  if (millis() > lastStatsTime + 30000UL) {
-    lastStatsTime = millis();
-    const WwwServer::stats_t *sp = www.getStats();
-    Serial.print("Web server statistics\n    Total requests: ");
-    Serial.println(sp->requestCount, DEC);
-    Serial.print("    Worst case request time: ");
-    Serial.print(sp->requestTimeWorstCase, DEC);
-    Serial.print("uS\n    Worst case task time: ");
-    Serial.print(sp->taskTimeWorstCase, DEC);
-    Serial.print("uS\n    Worst case task state: #");
-    Serial.println(sp->taskWorstCaseState, DEC);
-  }
-  */
 }
