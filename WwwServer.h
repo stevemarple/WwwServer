@@ -114,6 +114,9 @@ public:
   static const char* errorDocumentKeys[]; // ini file keys for error docs
   static const char* handlerNames[];
 
+  // Decode base 64 strings
+  static boolean b64_decode(unsigned char* buffer, int len);
+
   //WwwServer(uint16_t port = 80);
   WwwServer(const char* iniFilename, uint16_t port = 80);
   
@@ -164,7 +167,7 @@ public:
   
   int8_t getState(void) const;
   const stats_t* getStats(void);
-  
+ 
 protected:
   void updateStats(unsigned long startMicros, int8_t state);
 private:

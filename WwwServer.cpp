@@ -64,6 +64,76 @@ const char* WwwServer::handlerNames[] = {
   NULL
 };
 
+
+// Static member function to decode a base64 string. A return value of
+// true indicates successful decoding.
+boolean WwwServer::b64_decode(unsigned char* buffer, int len)
+{
+  // Every 4 bytes of input becomes 3 bytes of output. If the ASCII
+  // characters are mapped to their 6 bit values we can map input to
+  // output bytes in 4 byte chunks, so that
+  //
+  // | 00aaaaaa | 00bbbbbb | 00cccccc | 00dddddd |
+  // becomes
+  // | aaaaaabb | bbbbcccc | cccdddddd |
+  //
+
+  if (len  < 4)
+    // too short to be valid, and too short to terminate with null 
+    return false;
+    
+  int i = 0; // position counter
+  const unsigned char* inp = buffer;
+  unsigned char* outp = buffer;
+  unsigned char c;
+  while (*inp != '\0' && *inp != '=' && i <= len) {
+    unsigned char val;
+    c = *inp;
+    
+    // Map to integer value for character
+    if (c >= 'A' && c <= 'Z')
+      val = (c - 'A');
+    else if (c >= 'a' && c <= 'z')
+      val = (c - 'a') + 26;
+    else if (c >= '0' && c <= '9')
+      val = (c - '0') + 52;
+    else
+      switch (c) {
+      case '+':
+	val = 62;
+	break;
+      case '/':
+	val = 63;
+	break;
+      default:
+	// Illegal character
+	return false;
+      }
+    
+    switch (i % 4) {
+    case 0:
+      *outp = val << 2;
+      break;
+    case 1:
+      *outp++ += val >> 4;
+      *outp = (val & 0x0f) << 4;
+      break;
+    case 2:
+      *outp++ += val >> 2;
+      *outp = (val & 3) << 6;
+      break;
+    case 3:
+      *outp++ += val;
+      break;
+    }
+    ++inp;
+    ++i;
+  }
+  *outp = '\0'; // Terminate the string
+  return true;
+}
+
+
 WwwServer::WwwServer(const char* filename, uint16_t port) \
   : _server(port), _ini(filename)
 {
