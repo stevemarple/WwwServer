@@ -1,0 +1,6 @@
+Add a networkSetup() function which reads the network section from the
+WwwServer inifile and configures the network for the user. Will need
+to be called before begin(). How are Ethernet devices which use
+different chip select lines supported?
+
+Add a ZIP file for the web server example.
