@@ -1,12 +1,15 @@
-#ifndef _WWWSERVER_H
-#define _WWWSERVER_H
+#ifndef WWWSERVER_H
+#define WWWSERVER_H
 
+// Methods (eg GET, POST, DELETE)
 #define WWW_SERVER_MAX_METHOD_LEN 6
-// Maximum length of a URL (excluding terminating null character)
-#define WWW_SERVER_MAX_URL_LEN 40
+
+// Maximum length of a URL (excluding terminating null
+// character). This also includes URLs used in the Location header for
+// redirects.
+#define WWW_SERVER_MAX_URL_LEN 80
 #define WWW_SERVER_MAX_QUERY_LEN 20
 
-#include <Server.h>
 #include <SD.h>
 #include <Ethernet.h>
 
@@ -189,8 +192,8 @@ private:
   // status information
   stats_t _stats;
   
-  Server _server;
-  Client _client;
+  EthernetServer _server;
+  EthernetClient _client;
 
   // State information when accessing ini file
   IniFileState _iniState; 
@@ -213,5 +216,5 @@ private:
 
 };
 
-// Matches #ifndef _WEBSERVER_H
+// Matches #ifndef WEBSERVER_H
 #endif
