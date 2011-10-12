@@ -5,6 +5,9 @@
 #include <limits.h>
 #include <WwwServer.h>
 
+// Uncomment to get debug messages printed to Serial
+// #define DEBUG
+
 char WwwServer::urlStart[] = {"http://"};
 char WwwServer::location[] = {"Location: "};
 char WwwServer::contentType[] = {"Content-Type: "};
@@ -367,7 +370,12 @@ int8_t WwwServer::processRequest(char* buffer, int len)
     // erase URL
     if (findErrorDocument(buffer, len) == 0)
       break; // Not completed yet
-    _state = stateSendingStatusCode;
+    // _state = stateSendingStatusCode;
+
+    // having replaced the URL in the request go back to process the
+    // headers which were omitted when the URL was found to be
+    // forbidden
+    _state = stateReadingHeaders; 
     break;
     
   case stateSendingStatusCode:
@@ -730,6 +738,14 @@ int8_t WwwServer::urlToFilename(char* buffer, int len)
 	i = errorDirectoryNoTrailingSlash;
     }
   }
+
+#ifdef DEBUG
+  Serial.print("SD.open() for "); Serial.print(_url);
+  if (!_file)
+    Serial.println(" failed");
+  else
+    Serial.println(" succeeded");
+#endif
   
   return i;
 }
@@ -808,12 +824,33 @@ int8_t WwwServer::sendFileMimeType(boolean defaultType, char* buffer, int len)
 // position
 int8_t WwwServer::sendFile(char* buffer, int len)
 {
+#ifdef DEBUG
+  Serial.print("sendFile(), url="); Serial.print(_url);
+  if (_file) {
+    Serial.print(" name="); Serial.print(_file.name());
+  }
+  else
+    Serial.print(" name=<not opened>");
+  Serial.print(" _stateData=");
+  Serial.println(_stateData);
+#endif
+  
   // Send file contents
   if (!_file.seek(_stateData)) {
     //_file.close();
     _client.println(); // send blank line after headers
     _client.print("Seek failed for ");
     _client.println(_url);
+#ifdef DEBUG
+    Serial.print("Seek failed for url=");
+    Serial.println(_url);
+    if (_file) {
+      Serial.print(" file=");
+      Serial.println(_file.name());
+    }
+    else
+      Serial.println(" file=<not opened>");
+#endif
     return errorFileError;
   }
   
