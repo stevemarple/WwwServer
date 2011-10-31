@@ -138,9 +138,9 @@ boolean WwwServer::b64_decode(unsigned char* buffer, int len)
 
 
 WwwServer::WwwServer(const char* filename, uint16_t port) \
-  : _server(port), _ini(filename)
+  : _port(port), _ini(filename), _server(port) 
 {
-  _port = port;
+  //_port = port;
 
   _stats.requestStarted = 0UL;
   _stats.requestCount = 0UL;
@@ -213,7 +213,7 @@ int WwwServer::readLineFromClient(char* buffer, int len)
 
     buffer[i++] = c;
     if (i == len) {
-      buffer[len-1] == '\0';
+      buffer[len-1] = '\0';
       return errorBufferTooShort;
     }
   }
@@ -701,11 +701,12 @@ int8_t WwwServer::findErrorDocument(char* buffer, int len)
 {
   int8_t done = getIniFileValueForUrl(errorDocumentKeys[_statusCode], buffer,
 				      len);
-  if (done != 0)
+  if (done != 0) {
     if (strlen(buffer) <= WWW_SERVER_MAX_URL_LEN && SD.exists(buffer))
       strcpy(_url, buffer);
     else
       _url[0] = '\0';
+  }
   return done;
 }
 
